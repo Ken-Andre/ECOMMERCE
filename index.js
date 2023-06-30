@@ -5,6 +5,7 @@ const dotenv = require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 const authRouter = require("./routes/authRoute");
 const productRouter = require("./routes/productRoute");
+const startupRouter = require("./routes/startupRoute");
 const bodyParser = require("body-parser");
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
 const cookieParser = require("cookie-parser");
@@ -13,8 +14,29 @@ const allowedOrigins = require("./config/allowedOrigins");
 const cors = require("cors");
 const corsMiddleware = require("./middlewares/corsMiddleware");
 const corsOptions = require("./config/corsOption");
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
 dbConnect();
 
+//Le swagger ooptions
+const options = {
+	definition: {
+		openapi: "3.0.0",
+		info: {
+			title: "Library API",
+			version: "1.0.0",
+			description: "A simple Express Library API",
+		},
+		servers: [
+			{
+				url: "http://localhost:5000",
+			},
+		],
+	},
+	apis: ["./routes/*.js"],
+};
+
+const specs = swaggerJsDoc(options);
 
 app.use(morgan("dev"));
 app.use(bodyParser.json());
@@ -63,8 +85,13 @@ app.use(express.urlencoded({ extended: false }));
 // });
 
 //API Routes
+// Serve static files from the 'public' directory
+app.use(express.static(__dirname + '/public'));
 app.use("/api/user", authRouter);
 app.use("/api/product", productRouter);
+app.use("/api/startup", startupRouter);
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 // Error handling middleware
 app.use(notFound);

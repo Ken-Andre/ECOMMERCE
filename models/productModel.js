@@ -24,6 +24,7 @@ var productSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
+        //enum: ["Agroalimentaire","Artisanat","Animaux","Magasin & Jardin","Medias","Beaute et Bien-etre","Construction et fabrication","Shopping & Mode","Sante","Sport"],
         //ref: "Category",
     },
     brand: {
@@ -41,9 +42,12 @@ var productSchema = new mongoose.Schema({
         default: 0,
         //select: false,
     },
-    images: {
-        type: Array,
-    },
+    images: [
+        {
+          public_id: String,
+          url: String,
+        },
+      ],
     color: {
         type: String,
         required: true,

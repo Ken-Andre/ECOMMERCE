@@ -1,4 +1,5 @@
-const Product = require("../models/productModel");
+const Startup = require("../models/productModel");
+const Product = require("../models/startupModel");
 const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
 
@@ -16,10 +17,24 @@ const createProduct = asyncHandler(async (req, res) => {
 
 });
 
+// Create a startup
+// const createStartup = asyncHandler(async (req, res) => {
+//     try {
+//         if (req.body.title) {
+//             req.body.slug = slugify(req.body.title);
+//         }
+//         const newStartup = await Startup.create(req.body);
+//         res.json(newStartup);
+//     } catch (error) {
+//         throw new Error(error);
+//     }
+
+// });
+
 //Update a product
 const updateProduct = asyncHandler(async (req, res) => {
     const id = req.params.id;
-    console.log(id);
+    // console.log(id);
     try {
         if (req.body.title) {
             req.body.slug = slugify(req.body.title);
@@ -72,6 +87,18 @@ const getaProduct = asyncHandler(async (req, res) => {
     try {
         const findProduct = await Product.findById(id);
         res.json(findProduct);
+    } catch (error) {
+        throw new Error(error);
+    }
+});
+
+//Get a startup
+const getaStartup = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const findStartup = await Startup.findById(id);
+        res.json(findStartup);
     } catch (error) {
         throw new Error(error);
     }
@@ -132,5 +159,7 @@ module.exports = {
     getaProduct,
     getAllProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    // createStartup,
+    // getaStartup,
 };
